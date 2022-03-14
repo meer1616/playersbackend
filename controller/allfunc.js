@@ -22,6 +22,8 @@ const getallPlayer = async (req, res) => {
 const createPlayers = async (req, res) => {
   try {
     const player = await PlayersSchema.create(req.body);
+    // if(!req.file)
+
     res
       .status(201)
       .json({ player, success: true, msg: "player created successful" });
