@@ -1,14 +1,14 @@
 const express = require("express");
 const app = express();
 const routes = require("./routes/routes");
-const notfound=require("./middleware/notfound")
+const notfound = require("./middleware/notfound");
 const connectDb = require("./db/connect");
-require("dotenv").config()
+require("dotenv").config();
 
 app.use(express.json());
 
 app.use("/api/v1/players", routes);
-app.use(notfound)
+app.use(notfound);
 const port = process.env.PORT || 3000;
 
 const start = async () => {
