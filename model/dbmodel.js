@@ -12,10 +12,10 @@ const PlayersSchema = new mongoose.Schema({
     required: [true, "Age should not be empty"],
     // max: 80,
   },
-  imageUrl: {
-    type: String,
-    required: [true, "Image is required "],
-  },
+  // imageUrl: {
+  //   type: String,
+  //   required: [true, "Image is required "],
+  // },
   totalMedals: {
     type: Number,
     required: [true, "Please enter total number of Medals"],
