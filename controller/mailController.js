@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer')
 const express = require("express");
-const router = express.Router();
-
+// const router = express.Router();
+const MailData = require("../model/dbmail");
 const mail = async (req, res) => {
     // console.log(req.body);
     const { fullName, email, description } = req.body
@@ -9,15 +9,15 @@ const mail = async (req, res) => {
     let transport = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: "meer.spt@gmail.com",
-            pass: "ddkamtsordnhmsnq",
+            user: "meerpatel.2838@gmail.com",
+            pass: "lzwpkqtykpkztdmo",
         },
         tls: {
             rejectUnauthorized: false
         }
     })
     let mailOption = {
-        from: "meer.spt@gmail.com",
+        from: "meerpatel.2838@gmail.com",
         to: `${email}`,
         subject: "Thank you for reaching out!!!",
         text: `Dear ${fullName},
@@ -41,7 +41,15 @@ const mail = async (req, res) => {
             console.log("Email sent successfully");
         }
     })
-    return res.send("ok")
+    try {
+        const player = await MailData.create(req.body);
+        res
+            .status(201)
+            .json({ player, success: true, msg: "mail data created successful" });
+    } catch (error) {
+        res.status(500).json({ msg: error });
+    }
+    return res.status(200).json({ success: true, message: "Mail has been sent successfully " })
 }
 
 
