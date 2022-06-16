@@ -39,16 +39,20 @@ const mail = async (req, res) => {
             console.log(err);
         } else {
             console.log("Email sent successfully");
+            const saveit = async () => {
+
+                try {
+                    const player = await MailData.create(req.body);
+                    res
+                        .status(201)
+                        .json({ player, success: true, msg: "mail data created successful" });
+                } catch (error) {
+                    res.status(500).json({ msg: error });
+                }
+            }
         }
     })
-    try {
-        const player = await MailData.create(req.body);
-        res
-            .status(201)
-            .json({ player, success: true, msg: "mail data created successful" });
-    } catch (error) {
-        res.status(500).json({ msg: error });
-    }
+
     return res.status(200).json({ success: true, message: "Mail has been sent successfully " })
 }
 

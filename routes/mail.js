@@ -5,10 +5,10 @@ const MailData = require('../model/dbmail')
 
 const getallmailsData = async (req, res) => {
     try {
-        const players = await MailData.find({});
+        const mailData = await MailData.find({});
         res
             .status(200)
-            .json({ players, success: true, msg: "get all mail data successful" });
+            .json({ mailData, success: true, msg: "get all mail data successful" });
     } catch (error) {
         res.status(500).json({ msg: error });
     }
