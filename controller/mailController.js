@@ -19,7 +19,7 @@ const mail = async (req, res) => {
     let mailOption = {
         from: "meer.spt@gmail.com",
         to: `${email}`,
-        subject: "Thank you for reaching out!",
+        subject: "Thank you for reaching out!!!",
         text: `Dear ${fullName},
 
         Thank you for taking the time to introduce yourself.
