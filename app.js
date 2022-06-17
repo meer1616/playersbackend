@@ -5,8 +5,9 @@ const routes = require("./routes/routes");
 const notfound = require("./middleware/notfound");
 const connectDb = require("./db/connect");
 const mail = require("./controller/mailController");
+const cors = require('cors')
 require("dotenv").config();
-
+app.use(cors())
 app.use(express.json());
 app.use(
   fileUpload({
@@ -16,7 +17,7 @@ app.use(
 app.use("/api/v1/players", routes);
 app.use("/api/v1/portfoliomail", require("./routes/mail"));
 app.use(notfound);
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 const start = async () => {
   try {
