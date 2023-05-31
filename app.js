@@ -19,6 +19,9 @@ app.use(
     createParentPath: true,
   })
 );
+app.use("/api/v1/test", (req, res) => {
+  res.status(200).json({ success: true, message: "well done" })
+})
 app.use("/api/v1/players", routes);
 app.use("/api/v1/users", authRoutes);
 app.use("/api/v1/chat", chatRoutes);
