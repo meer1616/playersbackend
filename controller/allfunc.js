@@ -1,8 +1,30 @@
 const PlayersSchema = require("../model/dbmodel");
+const Address = require('../model/competitionModel')
 
 const getallPlayer = async (req, res) => {
+  console.log("rfr")
   try {
-    const players = await PlayersSchema.find({});
+    // const players = await PlayersSchema.find({}).populate('address', { city: 1 });
+    const players = await PlayersSchema.aggregate([
+      {
+        $lookup: {
+          from: "addresses",
+          localField: "address",
+          foreignField: "_id",
+          as: "addressInfo"
+        }
+      }, {
+        $unwind:
+          "$addressInfo"
+
+      }, {
+        $project: {
+          _id: 0,
+          name: 1,
+          address: 1
+        }
+      }
+    ])
     res
       .status(200)
       .json({ players, success: true, msg: "get all players successful" });
@@ -18,27 +40,61 @@ const getallPlayer = async (req, res) => {
   //   rating: "4",
   // });
 };
+const getallPlayerAddr = async (req, res) => {
+  console.log("rfr")
+  try {
+    const address = await Address.find();
+    res
+      .status(200)
+      .json({ address, success: true, msg: "get all players address successful" });
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
+
+  // res.status(200).json({
+  //   name: "Meer",
+  //   age: "21",
+  //   totalMedals: "50",
+  //   designation: "International Champion",
+  //   rating: "4",
+  // });
+};
 
 const createPlayers = async (req, res) => {
-  // let sampleFile;
-  // let uploadPath;
-
-  // if (!req.files || Object.keys(req.files).length === 0) {
-  //   return res.status(400).send("No files were uploaded.");
-  // }
-  // sampleFile = req.files.sampleFile;
-  // uploadPath = __dirname + "/images/" + sampleFile.name;
-
-  // sampleFile.mv(uploadPath, function (err) {
-  //   if (err) return res.status(500).send(err);
-  //   res.send("File uploaded!");
-  // });
-
+  console.log("create");
+  console.log("reqbody", req.body)
   try {
-    const player = await PlayersSchema.create(req.body);
+    const addreArray = []
+    const { address1, address2, ...other } = req.body
+    const addr = new Address(address1)
+    const addr2 = new Address(address2)
+    const finalsave = await addr.save().then(resp => addreArray.push(resp._id))
+    const finalsave2 = await addr2.save().then(resp => addreArray.push(resp._id))
+
+    console.log("final", addreArray);
+    // const addAr=addreArray.push(finalsave._id)
+    const player = await PlayersSchema.create({ ...other, address: addreArray });
     res
       .status(201)
       .json({ player, success: true, msg: "player created successful" });
+    // .json({ success: true, msg: "player created successful" });
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
+  // console.log(req);
+};
+const createPlayersAddr = async (req, res) => {
+  console.log("create");
+  console.log("reqbody", req.body)
+  try {
+    const { address1, address2, ...other } = req.body
+    const addr = new Address(address1)
+    const addr2 = new Address(address2)
+    const finalsave = await addr.save()
+    const finalsave2 = await addr2.save()
+    res
+      .status(201)
+      .json({ finalsave, success: true, msg: "player address created successful" });
   } catch (error) {
     res.status(500).json({ msg: error });
   }
@@ -54,6 +110,24 @@ const getSinglePlayer = async (req, res) => {
       return res
         .status(404)
         .json({ msg: `no player with this Id :${playerId}` });
+    }
+    res
+      .status(200)
+      .json({ player, success: true, msg: "get single player successful" });
+  } catch (error) {
+    res.status(500).json({ msg: error });
+  }
+};
+
+const getSinglePlayerAddr = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const player = await Address.findOne({ _id: id });
+
+    if (!player) {
+      return res
+        .status(404)
+        .json({ msg: `no player addr with this Id :${playerId}` });
     }
     res
       .status(200)
@@ -105,8 +179,11 @@ const deletePlayer = async (req, res) => {
 
 module.exports = {
   getallPlayer,
+  getallPlayerAddr,
   getSinglePlayer,
+  getSinglePlayerAddr,
   createPlayers,
+  createPlayersAddr,
   updatePlayer,
   deletePlayer,
 };

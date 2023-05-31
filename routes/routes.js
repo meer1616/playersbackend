@@ -6,8 +6,14 @@ const {
   createPlayers,
   deletePlayer,
   updatePlayer,
-  getSinglePlayer,
+  getSinglePlayer, createPlayersAddr, getSinglePlayerAddr, getallPlayerAddr
 } = require("../controller/allfunc");
+
+router.route("/addr").get(getallPlayerAddr).post(createPlayersAddr);
+router
+  .route("/addr/:id")
+  .get(getSinglePlayerAddr)
+
 
 router.route("/").get(getallPlayer).post(createPlayers);
 router
@@ -15,5 +21,12 @@ router
   .get(getSinglePlayer)
   .patch(updatePlayer)
   .delete(deletePlayer);
+
+
+
+// .patch(updatePlayerAddr)
+// .delete(deletePlayerAddr);
+
+
 
 module.exports = router;

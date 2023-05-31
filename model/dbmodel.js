@@ -8,16 +8,12 @@ const PlayersSchema = new mongoose.Schema({
     maxlength: [30, "Name cannot be more than 30 char"],
   },
   age: {
-    type: Number,
+    type: String,
     required: [true, "Age should not be empty"],
     // max: 80,
   },
-  // imageUrl: {
-  //   type: String,
-  //   required: [true, "Image is required "],
-  // },
   totalMedals: {
-    type: Number,
+    type: String,
     required: [true, "Please enter total number of Medals"],
     // max: 80,
   },
@@ -27,13 +23,14 @@ const PlayersSchema = new mongoose.Schema({
     trim: true,
   },
   rating: {
-    type: Number,
+    type: String,
     default: 0,
     // required: [true, "Age should not be empty"],
     // max: 80,
   },
+  address: [{
+    type: mongoose.Schema.Types.ObjectId, ref: "address"
+  }]
 });
-
-
 
 module.exports = mongoose.model("PlayersModel", PlayersSchema);
